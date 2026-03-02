@@ -1,0 +1,248 @@
+/* ===== GENERAL STYLING ===== */
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+    height: 380px;
+    background: url("../static/train.jpg") no-repeat center center/cover;
+    position: relative;
+}
+
+.hero-overlay {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-overlay h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.hero-overlay p {
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+/* ===== CONTAINER CARD ===== */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 50px auto;
+    background: white;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* ===== SEARCH BAR ===== */
+form {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    width: 280px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin: 5px;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #1e3c72;
+    outline: none;
+    box-shadow: 0 0 6px rgba(30, 60, 114, 0.4);
+}
+
+/* ===== BUTTONS ===== */
+button {
+    padding: 10px 18px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #16305a;
+}
+
+/* ===== LINK BUTTONS ===== */
+a {
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: 0.3s;
+    display: inline-block;
+    margin: 3px;
+}
+
+/* EDIT BUTTON */
+a.edit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+a.edit-btn:hover {
+    background-color: #1e7e34;
+}
+
+/* DELETE BUTTON */
+a.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+a.delete-btn:hover {
+    background-color: #a71d2a;
+}
+
+/* ===== TABLE ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 14px;
+    text-align: center;
+    font-size: 14px;
+}
+
+th {
+    background: #1e3c72;
+    color: white;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e6f0ff;
+    transition: 0.2s;
+}
+
+/* ===== ADD BUTTON ===== */
+.top-btn {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.top-btn a {
+    background: #007bff;
+    color: white;
+    padding: 10px 18px;
+    font-size: 15px;
+}
+
+.top-btn a:hover {
+    background: #0056b3;
+}
+
+/* ===== FADE ANIMATION ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        width: 90%;
+    }
+
+    table {
+        font-size: 12px;
+    }
+}
+/* ================= LOGIN PAGE ================= */
+
+.login-page {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: url("train.jpg") no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 40px;
+    width: 350px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.login-box h2 {
+    margin-bottom: 10px;
+    color: #1e3c72;
+}
+
+.subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.login-box input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.login-box button:hover {
+    background: #16305a;
+}
