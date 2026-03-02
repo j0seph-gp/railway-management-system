@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 app.secret_key = "railway_secret_key"
 
-# ================= DATABASE CONNECTION (FOR DEPLOYMENT) =================
+# ================= DATABASE CONNECTION =================
 def connect_db():
     return mysql.connector.connect(
         host=os.environ.get("MYSQLHOST"),
@@ -49,8 +49,10 @@ def home():
     search = request.args.get("search")
 
     if search:
-        cur.execute("SELECT * FROM trains WHERE train_name LIKE %s",
-                    ("%" + search + "%",))
+        cur.execute(
+            "SELECT * FROM trains WHERE train_name LIKE %s",
+            ("%" + search + "%",)
+        )
     else:
         cur.execute("SELECT * FROM trains")
 
@@ -154,8 +156,10 @@ def book_ticket(train_no):
         gender = request.form["gender"]
         seats_booked = int(request.form["seats_booked"])
 
-        cur.execute("SELECT available_seats FROM trains WHERE train_no=%s",
-                    (train_no,))
+        cur.execute(
+            "SELECT available_seats FROM trains WHERE train_no=%s",
+            (train_no,)
+        )
         result = cur.fetchone()
 
         if result and result[0] >= seats_booked:
@@ -211,4 +215,5 @@ def view_bookings():
 
 # ================= MAIN =================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
