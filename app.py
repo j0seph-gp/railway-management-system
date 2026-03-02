@@ -6,13 +6,19 @@ app = Flask(__name__)
 app.secret_key = "railway_secret_key"
 
 # ================= DATABASE CONNECTION =================
+import mysql.connector
+import os
+from urllib.parse import urlparse
+
 def connect_db():
+    url = urlparse(os.environ.get("DATABASE_URL"))
+
     return mysql.connector.connect(
-        host=os.environ.get("MYSQLHOST", "localhost"),
-        user=os.environ.get("MYSQLUSER", "root"),
-        password=os.environ.get("MYSQLPASSWORD", ""),
-        database=os.environ.get("MYSQLDATABASE", ""),
-        port=int(os.environ.get("MYSQLPORT", 3306))
+        host=url.hostname,
+        user=url.username,
+        password=url.password,
+        database=url.path[1:],
+        port=url.port
     )
 
 # ================= LOGIN =================
