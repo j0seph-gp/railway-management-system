@@ -20,7 +20,44 @@ def connect_db():
         database=url.path[1:],
         port=url.port
     )
+def create_tables():
+    con = connect_db()
+    cur = con.cursor()
 
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS trains (
+            train_no INT PRIMARY KEY,
+            train_name VARCHAR(100),
+            source VARCHAR(100),
+            destination VARCHAR(100),
+            total_seats INT,
+            available_seats INT
+        )
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS passengers (
+            passenger_id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100),
+            age INT,
+            gender VARCHAR(10)
+        )
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS bookings (
+            booking_id INT AUTO_INCREMENT PRIMARY KEY,
+            passenger_id INT,
+            train_no INT,
+            seats_booked INT,
+            FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
+            FOREIGN KEY (train_no) REFERENCES trains(train_no)
+        )
+    """)
+
+    con.commit()
+    con.close()
+create_tables()
 # ================= LOGIN =================
 @app.route("/login", methods=["GET", "POST"])
 def login():
