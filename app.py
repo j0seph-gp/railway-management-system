@@ -1,63 +1,19 @@
 from flask import Flask, render_template, request, redirect, session
 import mysql.connector
+import os
 
 app = Flask(__name__)
 app.secret_key = "railway_secret_key"
 
-# ================= DATABASE CONNECTION =================
+# ================= DATABASE CONNECTION (FOR DEPLOYMENT) =================
 def connect_db():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="joseph@12345678",
-        database="railway_db"
+        host=os.environ.get("MYSQLHOST"),
+        user=os.environ.get("MYSQLUSER"),
+        password=os.environ.get("MYSQLPASSWORD"),
+        database=os.environ.get("MYSQLDATABASE"),
+        port=int(os.environ.get("MYSQLPORT"))
     )
-
-# ================= SETUP DATABASE & TABLES =================
-def setup_database():
-    con = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="joseph@12345678"
-    )
-    cur = con.cursor()
-
-    cur.execute("CREATE DATABASE IF NOT EXISTS railway_db")
-    cur.execute("USE railway_db")
-
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS trains(
-        train_no INT PRIMARY KEY,
-        train_name VARCHAR(50),
-        source VARCHAR(50),
-        destination VARCHAR(50),
-        total_seats INT,
-        available_seats INT
-    )
-    """)
-
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS passengers(
-        passenger_id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100),
-        age INT,
-        gender VARCHAR(10)
-    )
-    """)
-
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS bookings(
-        booking_id INT AUTO_INCREMENT PRIMARY KEY,
-        passenger_id INT,
-        train_no INT,
-        seats_booked INT,
-        FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
-        FOREIGN KEY (train_no) REFERENCES trains(train_no)
-    )
-    """)
-
-    con.commit()
-    con.close()
 
 # ================= LOGIN =================
 @app.route("/login", methods=["GET", "POST"])
@@ -93,8 +49,8 @@ def home():
     search = request.args.get("search")
 
     if search:
-        query = "SELECT * FROM trains WHERE train_name LIKE %s"
-        cur.execute(query, ("%" + search + "%",))
+        cur.execute("SELECT * FROM trains WHERE train_name LIKE %s",
+                    ("%" + search + "%",))
     else:
         cur.execute("SELECT * FROM trains")
 
@@ -120,13 +76,14 @@ def add_train():
         con = connect_db()
         cur = con.cursor()
 
-        query = "INSERT INTO trains VALUES (%s, %s, %s, %s, %s, %s)"
-        data = (train_no, train_name, source, destination, total_seats, available_seats)
+        cur.execute(
+            "INSERT INTO trains VALUES (%s, %s, %s, %s, %s, %s)",
+            (train_no, train_name, source, destination,
+             total_seats, available_seats)
+        )
 
-        cur.execute(query, data)
         con.commit()
         con.close()
-
         return redirect("/")
 
     return render_template("add_train.html")
@@ -161,18 +118,19 @@ def edit_train(train_no):
         total_seats = request.form["total_seats"]
         available_seats = request.form["available_seats"]
 
-        query = """
-        UPDATE trains 
-        SET train_name=%s, source=%s, destination=%s, 
-            total_seats=%s, available_seats=%s
-        WHERE train_no=%s
-        """
-        data = (train_name, source, destination, total_seats, available_seats, train_no)
+        cur.execute("""
+            UPDATE trains
+            SET train_name=%s,
+                source=%s,
+                destination=%s,
+                total_seats=%s,
+                available_seats=%s
+            WHERE train_no=%s
+        """, (train_name, source, destination,
+              total_seats, available_seats, train_no))
 
-        cur.execute(query, data)
         con.commit()
         con.close()
-
         return redirect("/")
 
     cur.execute("SELECT * FROM trains WHERE train_no=%s", (train_no,))
@@ -196,7 +154,8 @@ def book_ticket(train_no):
         gender = request.form["gender"]
         seats_booked = int(request.form["seats_booked"])
 
-        cur.execute("SELECT available_seats FROM trains WHERE train_no=%s", (train_no,))
+        cur.execute("SELECT available_seats FROM trains WHERE train_no=%s",
+                    (train_no,))
         result = cur.fetchone()
 
         if result and result[0] >= seats_booked:
@@ -219,7 +178,6 @@ def book_ticket(train_no):
 
             con.commit()
             con.close()
-
             return redirect("/")
 
         else:
@@ -229,7 +187,7 @@ def book_ticket(train_no):
     con.close()
     return render_template("book_ticket.html", train_no=train_no)
 
-# ================= VIEW BOOKINGS (ADMIN ONLY) =================
+# ================= VIEW BOOKINGS =================
 @app.route("/bookings")
 def view_bookings():
     if session.get("role") != "admin":
@@ -238,15 +196,14 @@ def view_bookings():
     con = connect_db()
     cur = con.cursor()
 
-    query = """
-    SELECT b.booking_id, p.name, p.age, p.gender, 
-           t.train_name, b.seats_booked
-    FROM bookings b
-    JOIN passengers p ON b.passenger_id = p.passenger_id
-    JOIN trains t ON b.train_no = t.train_no
-    """
+    cur.execute("""
+        SELECT b.booking_id, p.name, p.age, p.gender,
+               t.train_name, b.seats_booked
+        FROM bookings b
+        JOIN passengers p ON b.passenger_id = p.passenger_id
+        JOIN trains t ON b.train_no = t.train_no
+    """)
 
-    cur.execute(query)
     records = cur.fetchall()
     con.close()
 
@@ -254,5 +211,4 @@ def view_bookings():
 
 # ================= MAIN =================
 if __name__ == "__main__":
-    setup_database()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
