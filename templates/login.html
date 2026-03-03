@@ -8,13 +8,17 @@
 
     <div class="login-box">
         <h2>Railway Management System</h2>
-        <p class="subtitle">Secure Login Portal</p>
+        <p class="subtitle">Select Login Type</p>
 
-        <form method="POST">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
+        <div class="login-buttons">
+            <a href="/admin_login">
+                <button type="button" class="admin-btn">Admin Login</button>
+            </a>
+
+            <a href="/user_login">
+                <button type="button" class="user-btn">User Login</button>
+            </a>
+        </div>
 
     </div>
 

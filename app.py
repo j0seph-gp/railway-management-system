@@ -1,25 +1,34 @@
 from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 import os
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 app.secret_key = "railway_secret_key"
 
 # ================= DATABASE CONNECTION =================
-import mysql.connector
-import os
-from urllib.parse import urlparse
-
 def connect_db():
-    url = urlparse(os.environ.get("DATABASE_URL"))
+    database_url = os.environ.get("DATABASE_URL")
 
-    return mysql.connector.connect(
-        host=url.hostname,
-        user=url.username,
-        password=url.password,
-        database=url.path[1:],
-        port=url.port
-    )
+    if database_url:
+        url = urlparse(database_url)
+        return mysql.connector.connect(
+            host=url.hostname,
+            user=url.username,
+            password=url.password,
+            database=url.path[1:],
+            port=url.port
+        )
+    else:
+        # Local fallback (for development)
+        return mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="your_local_password",
+            database="railway_db"
+        )
+
+# ================= CREATE TABLES =================
 def create_tables():
     con = connect_db()
     cur = con.cursor()
@@ -57,22 +66,40 @@ def create_tables():
 
     con.commit()
     con.close()
+
 create_tables()
-# ================= LOGIN =================
-@app.route("/login", methods=["GET", "POST"])
+
+# ================= LOGIN SELECTION PAGE =================
+@app.route("/login")
 def login():
+    return render_template("login.html")
+
+# ================= ADMIN LOGIN =================
+@app.route("/admin_login", methods=["GET", "POST"])
+def admin_login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
 
         if username == "admin" and password == "admin123":
             session["role"] = "admin"
+            session["username"] = "Administrator"
+            return redirect("/")
         else:
-            session["role"] = "user"
+            return "Invalid Admin Credentials"
 
+    return render_template("admin_login.html")
+
+# ================= USER LOGIN =================
+@app.route("/user_login", methods=["GET", "POST"])
+def user_login():
+    if request.method == "POST":
+        username = request.form["username"]
+        session["role"] = "user"
+        session["username"] = username
         return redirect("/")
 
-    return render_template("login.html")
+    return render_template("user_login.html")
 
 # ================= LOGOUT =================
 @app.route("/logout")
@@ -102,7 +129,7 @@ def home():
     records = cur.fetchall()
     con.close()
 
-    return render_template("index.html", records=records)
+    return render_template("index.html", records=records, username=session.get("username"))
 
 # ================= ADD TRAIN =================
 @app.route("/add", methods=["GET", "POST"])
@@ -111,20 +138,19 @@ def add_train():
         return "Only Admin Can Add Trains"
 
     if request.method == "POST":
-        train_no = request.form["train_no"]
-        train_name = request.form["train_name"]
-        source = request.form["source"]
-        destination = request.form["destination"]
-        total_seats = request.form["total_seats"]
-        available_seats = request.form["available_seats"]
-
         con = connect_db()
         cur = con.cursor()
 
         cur.execute(
             "INSERT INTO trains VALUES (%s, %s, %s, %s, %s, %s)",
-            (train_no, train_name, source, destination,
-             total_seats, available_seats)
+            (
+                request.form["train_no"],
+                request.form["train_name"],
+                request.form["source"],
+                request.form["destination"],
+                request.form["total_seats"],
+                request.form["available_seats"],
+            )
         )
 
         con.commit()
@@ -141,10 +167,9 @@ def delete_train(train_no):
 
     con = connect_db()
     cur = con.cursor()
-    cur.execute("DELETE FROM trains WHERE train_no = %s", (train_no,))
+    cur.execute("DELETE FROM trains WHERE train_no=%s", (train_no,))
     con.commit()
     con.close()
-
     return redirect("/")
 
 # ================= EDIT TRAIN =================
@@ -157,12 +182,6 @@ def edit_train(train_no):
     cur = con.cursor()
 
     if request.method == "POST":
-        train_name = request.form["train_name"]
-        source = request.form["source"]
-        destination = request.form["destination"]
-        total_seats = request.form["total_seats"]
-        available_seats = request.form["available_seats"]
-
         cur.execute("""
             UPDATE trains
             SET train_name=%s,
@@ -171,8 +190,14 @@ def edit_train(train_no):
                 total_seats=%s,
                 available_seats=%s
             WHERE train_no=%s
-        """, (train_name, source, destination,
-              total_seats, available_seats, train_no))
+        """, (
+            request.form["train_name"],
+            request.form["source"],
+            request.form["destination"],
+            request.form["total_seats"],
+            request.form["available_seats"],
+            train_no
+        ))
 
         con.commit()
         con.close()
@@ -181,7 +206,6 @@ def edit_train(train_no):
     cur.execute("SELECT * FROM trains WHERE train_no=%s", (train_no,))
     train = cur.fetchone()
     con.close()
-
     return render_template("edit_train.html", train=train)
 
 # ================= BOOK TICKET =================
@@ -194,22 +218,20 @@ def book_ticket(train_no):
     cur = con.cursor()
 
     if request.method == "POST":
-        name = request.form["name"]
-        age = request.form["age"]
-        gender = request.form["gender"]
         seats_booked = int(request.form["seats_booked"])
 
-        cur.execute(
-            "SELECT available_seats FROM trains WHERE train_no=%s",
-            (train_no,)
-        )
+        cur.execute("SELECT available_seats FROM trains WHERE train_no=%s", (train_no,))
         result = cur.fetchone()
 
         if result and result[0] >= seats_booked:
 
             cur.execute(
                 "INSERT INTO passengers (name, age, gender) VALUES (%s, %s, %s)",
-                (name, age, gender)
+                (
+                    request.form["name"],
+                    request.form["age"],
+                    request.form["gender"]
+                )
             )
             passenger_id = cur.lastrowid
 
@@ -217,6 +239,7 @@ def book_ticket(train_no):
                 "INSERT INTO bookings (passenger_id, train_no, seats_booked) VALUES (%s, %s, %s)",
                 (passenger_id, train_no, seats_booked)
             )
+            booking_id = cur.lastrowid
 
             cur.execute(
                 "UPDATE trains SET available_seats = available_seats - %s WHERE train_no=%s",
@@ -225,8 +248,13 @@ def book_ticket(train_no):
 
             con.commit()
             con.close()
-            return redirect("/")
 
+            return render_template(
+                "booking_success.html",
+                booking_id=booking_id,
+                train_no=train_no,
+                seats=seats_booked
+            )
         else:
             con.close()
             return "Not enough seats available!"
