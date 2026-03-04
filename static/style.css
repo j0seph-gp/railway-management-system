@@ -1,281 +1,248 @@
-/* ===== GOOGLE FONT ===== */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
-
 /* ===== GENERAL STYLING ===== */
-body{
-    font-family: 'Poppins', sans-serif;
-    margin:0;
-    padding:0;
-    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color:#333;
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    margin: 0;
+    padding: 0;
+    color: #333;
 }
 
 /* ===== HERO SECTION ===== */
-.hero{
-    height:420px;
-    background:url("../static/train.jpg") center/cover no-repeat;
-    position:relative;
+.hero {
+    height: 380px;
+    background: url("../static/train.jpg") no-repeat center center/cover;
+    position: relative;
 }
 
-.hero-overlay{
-    background:rgba(0,0,0,0.6);
-    height:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    text-align:center;
+.hero-overlay {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
 }
 
-.hero-overlay h1{
-    font-size:46px;
-    letter-spacing:2px;
-    margin-bottom:10px;
+.hero-overlay h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
 }
 
-.hero-overlay p{
-    font-size:18px;
-    opacity:0.9;
+.hero-overlay p {
+    font-size: 18px;
+    letter-spacing: 2px;
 }
 
 /* ===== CONTAINER CARD ===== */
-.container{
-    width:90%;
-    max-width:1100px;
-    margin:50px auto;
-    padding:35px;
-
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(8px);
-
-    border-radius:14px;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,0.2);
-
-    animation:fadeIn .6s ease;
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 50px auto;
+    background: white;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 0.6s ease-in-out;
 }
 
-/* ===== SEARCH FORM ===== */
-form{
-    text-align:center;
-    margin-bottom:25px;
+/* ===== SEARCH BAR ===== */
+form {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
-/* ===== INPUTS ===== */
 input[type="text"],
-input[type="number"]{
-    padding:11px 12px;
-    width:270px;
-
-    border-radius:8px;
-    border:1px solid #ddd;
-
-    font-size:14px;
-
-    transition:all .3s;
+input[type="number"] {
+    padding: 10px;
+    width: 280px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin: 5px;
+    transition: 0.3s;
+    font-size: 14px;
 }
 
-input:focus{
-    outline:none;
-    border-color:#2c5364;
-
-    box-shadow:
-        0 0 6px rgba(44,83,100,0.3);
+input:focus {
+    border-color: #1e3c72;
+    outline: none;
+    box-shadow: 0 0 6px rgba(30, 60, 114, 0.4);
 }
 
 /* ===== BUTTONS ===== */
-button{
-    padding:11px 20px;
-
-    background: linear-gradient(135deg,#1e3c72,#2a5298);
-
-    color:white;
-    border:none;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    font-weight:500;
-
-    transition:all .3s;
+button {
+    padding: 10px 18px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
 }
 
-button:hover{
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 6px 12px rgba(0,0,0,0.2);
+button:hover {
+    background: #16305a;
 }
 
 /* ===== LINK BUTTONS ===== */
-a{
-    text-decoration:none;
-    padding:8px 14px;
-
-    border-radius:6px;
-    font-size:14px;
-
-    margin:2px;
-
-    transition:.25s;
+a {
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: 0.3s;
+    display: inline-block;
+    margin: 3px;
 }
 
 /* EDIT BUTTON */
-.edit-btn{
-    background:#28a745;
-    color:white;
+a.edit-btn {
+    background-color: #28a745;
+    color: white;
 }
 
-.edit-btn:hover{
-    background:#1f7e35;
+a.edit-btn:hover {
+    background-color: #1e7e34;
 }
 
 /* DELETE BUTTON */
-.delete-btn{
-    background:#dc3545;
-    color:white;
+a.delete-btn {
+    background-color: #dc3545;
+    color: white;
 }
 
-.delete-btn:hover{
-    background:#a71d2a;
+a.delete-btn:hover {
+    background-color: #a71d2a;
 }
 
 /* ===== TABLE ===== */
-table{
-    width:100%;
-    border-collapse:collapse;
-
-    border-radius:10px;
-    overflow:hidden;
-
-    margin-top:20px;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-th,td{
-    padding:14px;
-    text-align:center;
+th, td {
+    padding: 14px;
+    text-align: center;
+    font-size: 14px;
 }
 
-/* TABLE HEADER */
-th{
-    background: linear-gradient(135deg,#1e3c72,#2a5298);
-    color:white;
-    font-weight:500;
+th {
+    background: #1e3c72;
+    color: white;
+    font-weight: 600;
 }
 
-/* ROW COLORS */
-tr:nth-child(even){
-    background:#f7f9fc;
+tr:nth-child(even) {
+    background-color: #f8f9fa;
 }
 
-tr:hover{
-    background:#e8f1ff;
-    transition:.2s;
+tr:hover {
+    background-color: #e6f0ff;
+    transition: 0.2s;
 }
 
-/* ===== ADD TRAIN BUTTON ===== */
-.top-btn{
-    text-align:center;
-    margin:20px 0;
+/* ===== ADD BUTTON ===== */
+.top-btn {
+    text-align: center;
+    margin: 20px 0;
 }
 
-.top-btn a{
-    background: linear-gradient(135deg,#007bff,#0056b3);
-    color:white;
-    padding:11px 18px;
-    font-weight:500;
+.top-btn a {
+    background: #007bff;
+    color: white;
+    padding: 10px 18px;
+    font-size: 15px;
 }
 
-.top-btn a:hover{
-    transform:translateY(-2px);
-}
-
-/* ===== LOGIN PAGE ===== */
-.login-page{
-    height:100vh;
-
-    background:url("../static/train.jpg") center/cover no-repeat;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-/* LOGIN CARD */
-.login-box{
-
-    background: rgba(255,255,255,0.95);
-
-    padding:40px;
-    width:350px;
-
-    border-radius:14px;
-
-    text-align:center;
-
-    box-shadow:
-        0 12px 35px rgba(0,0,0,0.3);
-
-    animation:fadeIn .6s ease;
-}
-
-.login-box h2{
-    margin-bottom:10px;
-    color:#1e3c72;
-}
-
-.subtitle{
-    font-size:14px;
-    margin-bottom:20px;
-    color:#555;
-}
-
-.login-box input{
-    width:90%;
-    padding:11px;
-    margin:8px 0;
-
-    border-radius:7px;
-    border:1px solid #ccc;
-}
-
-.login-box button{
-    width:100%;
+.top-btn a:hover {
+    background: #0056b3;
 }
 
 /* ===== FADE ANIMATION ===== */
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(15px);
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
     }
-    to{
-        opacity:1;
-        transform:translateY(0);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:768px){
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
 
-.container{
-    width:95%;
-    padding:20px;
+    input[type="text"],
+    input[type="number"] {
+        width: 90%;
+    }
+
+    table {
+        font-size: 12px;
+    }
+}
+/* ================= LOGIN PAGE ================= */
+
+.login-page {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: url("train.jpg") no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-input{
-    width:90%;
+.login-box {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 40px;
+    width: 350px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
-table{
-    font-size:13px;
+.login-box h2 {
+    margin-bottom: 10px;
+    color: #1e3c72;
 }
 
-.hero-overlay h1{
-    font-size:32px;
+.subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #555;
 }
 
+.login-box input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.login-box button:hover {
+    background: #16305a;
 }
